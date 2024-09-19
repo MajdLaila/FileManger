@@ -5,8 +5,10 @@ import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilec
 import 'package:files_manger/feauters/Folders/data/cubit/permission/getpermissioncubit.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/allfolders.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/dialog.dart';
+import 'package:files_manger/feauters/Folders/view/widgets/text_feild_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -67,7 +69,15 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Allfolders(),
+      body: ListView(
+        children: [
+          SizedBox(
+            height: 20.h,
+          ),
+          Searchbar(),
+          SizedBox(height: 700.h, child: const Allfolders()),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Appcolor.fourth, // لون الـ FAB
         onPressed: () {

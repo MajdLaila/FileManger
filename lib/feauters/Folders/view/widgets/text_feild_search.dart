@@ -35,7 +35,7 @@ class Searchbar extends StatelessWidget {
                   width: 24, height: 24), // ضع المسار الصحيح للصورة هنا
             ),
           ),
-          onSubmitted: (value) {
+          onChanged: (value) {
             BlocProvider.of<SearchFoldersFilesCubit>(context).search(
                 thefolder: textEditingController.text, context: context);
           },

@@ -28,14 +28,14 @@ class _AllfoldersState extends State<Allfolders> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<Getallfilecubit, Getallfilestate>(
-    listener: (context, state) {
-      
-    },
+      listener: (context, state) {},
       builder: (context, state) {
         if (state is Getallfilestateloading) {
           return const LOAD();
         } else if (state is Getallfilestatesuccss) {
           return ListView.builder(
+            shrinkWrap: true,
+         
             itemCount: state.fileSystem.keys.length,
             itemBuilder: (context, index) {
               final dirPath = state.fileSystem.keys.elementAt(index);
@@ -84,48 +84,47 @@ class _AllfoldersState extends State<Allfolders> {
                                 if (value == 'rename') {
                                   // عرض نافذة تعديل الاسم
                                   showAppDialog(
-                                    datatext: 'Rename',
-                                    function: () => BlocProvider.of<
-                                            Getallfilecubit>(context)
-                                        .renameFolder(
-                                            dirPath,
-                                            BlocProvider.of<Getallfilecubit>(
-                                                    context)
-                                                .foldername
-                                                .text),
-                                    textEditingController: textEditingController,
-                                         context: context
-                                  );
-                                      }
-                                    },
-                                    itemBuilder: (context) => [
-                                      const PopupMenuItem(
-                                        value: 'rename',
-                                        child: Text('Rename'),
-                                      ),
-                                      const PopupMenuItem(
-                                        value: 'delete',
-                                        child: Text('Delete'),
-                                      ),
-                                    ],
-                                    icon: const Icon(Icons.more_vert),
-                                  ),
-                                ],
-                              ),
+                                      datatext: 'Rename',
+                                      function: () => BlocProvider.of<
+                                              Getallfilecubit>(context)
+                                          .renameFolder(
+                                              dirPath,
+                                              BlocProvider.of<Getallfilecubit>(
+                                                      context)
+                                                  .foldername
+                                                  .text),
+                                      textEditingController:
+                                          textEditingController,
+                                      context: context);
+                                }
+                              },
+                              itemBuilder: (context) => [
+                                const PopupMenuItem(
+                                  value: 'rename',
+                                  child: Text('Rename'),
+                                ),
+                                const PopupMenuItem(
+                                  value: 'delete',
+                                  child: Text('Delete'),
+                                ),
+                              ],
+                              icon: const Icon(Icons.more_vert),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
-                    );
-                  },
-                );
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
         } else if (state is Getallfilestatefailuer) {
           return Center(child: Text('Error: ${state.error}'));
         } else {
           return const Center(child: Text('No files available.'));
         }
       },
-    
     );
   }
 }
