@@ -5,6 +5,7 @@ import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilec
 import 'package:files_manger/feauters/Folders/data/cubit/permission/getpermissioncubit.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/allfolders.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/dialog.dart';
+import 'package:files_manger/feauters/Folders/view/widgets/page_search.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/text_feild_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,13 +69,21 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.sort), // أيقونة ترتيب
           ),
         ],
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) {
+                  return const PageSearch();
+                },
+              ));
+            },
+            icon: const Icon(Icons.search)),
       ),
       body: ListView(
         children: [
           SizedBox(
             height: 20.h,
           ),
-          Searchbar(),
           SizedBox(height: 700.h, child: const Allfolders()),
         ],
       ),
