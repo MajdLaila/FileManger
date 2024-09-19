@@ -1,35 +1,18 @@
+import 'dart:developer';
 import 'dart:io';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:files_manger/const.dart';
 import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilecubit.dart';
 import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilestate.dart';
+import 'package:files_manger/feauters/Folders/view/widgets/dialog.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/floderfilepage.dart'; // تأكد من أن صفحة FolderFilesPage موجودة
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Allfolders extends StatelessWidget {
-  const Allfolders({super.key});
-
-  // دالة لتحديد نوع الأيقونة بناءً على الامتداد
-  IconData _getIconForFileType(String filePath) {
-    if (FileSystemEntity.isDirectorySync(filePath)) {
-      return Icons.folder;
-    } else if (filePath.endsWith('.jpg') ||
-        filePath.endsWith('.jpeg') ||
-        filePath.endsWith('.png') ||
-        filePath.endsWith('.gif')) {
-      return Icons.image;
-    } else if (filePath.endsWith('.mp3') || filePath.endsWith('.wav')) {
-      return Icons.audiotrack;
-    } else if (filePath.endsWith('.pdf')) {
-      return Icons.picture_as_pdf;
-    } else if (filePath.endsWith('.mp4') || filePath.endsWith('.avi')) {
-      return Icons.movie;
-    } else {
-      return Icons.insert_drive_file;
-    }
-  }
-
+  Allfolders({super.key});
+  final TextEditingController textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<Getallfilecubit, Getallfilestate>(
@@ -41,29 +24,86 @@ class Allfolders extends StatelessWidget {
             itemCount: state.fileSystem.keys.length,
             itemBuilder: (context, index) {
               final dirPath = state.fileSystem.keys.elementAt(index);
-
-              return Container(
-                padding: EdgeInsets.all(12.h),
-                margin: EdgeInsets.all(12.h),
-                decoration: BoxDecoration(
-                    color: Appcolor.second,
-                    borderRadius: BorderRadius.circular(15.r)),
-                child: ListTile(
-                  leading: const Icon(Icons.folder),
-                  title: Text(
-                    dirPath.split('/').last,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            FolderFilesPage(folderPath: dirPath),
+              return Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                FolderFilesPage(folderPath: dirPath),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: 80.h,
+                        padding: EdgeInsets.all(12.h),
+                        margin: EdgeInsets.all(12.h),
+                        decoration: BoxDecoration(
+                            color: Appcolor.second,
+                            borderRadius: BorderRadius.circular(15.r)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Icon(BlocProvider.of<Getallfilecubit>(context)
+                                .getIconForFileType(dirPath)),
+                            SizedBox(
+                              width: 20.w,
+                            ),
+                            Text(
+                              dirPath.split('/').last,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: 30.w,
+                            ),
+                            PopupMenuButton<String>(
+                              onSelected: (value) {
+                                if (value == 'rename') {
+                                  // عرض نافذة تعديل الاسم
+                                  showAppDialog(
+                                    datatext: 'Rename',
+                                    function: () => BlocProvider.of<
+                                            Getallfilecubit>(context)
+                                        .renameFolder(
+                                            dirPath,
+                                            BlocProvider.of<Getallfilecubit>(
+                                                    context)
+                                                .foldername
+                                                .text),
+                                    textEditingController:
+                                        BlocProvider.of<Getallfilecubit>(
+                                                context)
+                                            .foldername,
+                                    context: context,
+                                  );
+                                } else if (value == 'delete') {
+                                  // تنفيذ عملية الحذف
+                                  BlocProvider.of<Getallfilecubit>(context)
+                                      .deleteFolder(dirPath);
+                                }
+                              },
+                              itemBuilder: (context) => [
+                                const PopupMenuItem(
+                                  value: 'rename',
+                                  child: Text('Rename'),
+                                ),
+                                const PopupMenuItem(
+                                  value: 'delete',
+                                  child: Text('Delete'),
+                                ),
+                              ],
+                              icon: const Icon(Icons.more_vert),
+                            ),
+                          ],
+                        ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  ),
+                ],
               );
             },
           );

@@ -1,7 +1,3 @@
- 
-
- 
-import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilecubit.dart';
 import 'package:flutter/material.dart';
 
 sealed class Getpermissionstate {}
@@ -9,12 +5,8 @@ sealed class Getpermissionstate {}
 final class Getpermissionstateinit extends Getpermissionstate {}
 
 final class Getpermissionstatesuccss extends Getpermissionstate {
-
-  Getpermissionstatesuccss(BuildContext context){
-    
-  }
+  Getpermissionstatesuccss(BuildContext context);
 }
-
 
 final class Getpermissionstatefailuer extends Getpermissionstate {
   final String error;
