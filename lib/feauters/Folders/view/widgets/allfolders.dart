@@ -28,83 +28,74 @@ class _AllfoldersState extends State<Allfolders> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<Getallfilecubit, Getallfilestate>(
+    listener: (context, state) {
+      
+    },
       builder: (context, state) {
         if (state is Getallfilestateloading) {
           return const LOAD();
         } else if (state is Getallfilestatesuccss) {
-          log(BlocProvider.of<Getallfilecubit>(context).fileSystem.toString());
-          return Column(
-            children: [
-              const SizedBox(height: 14),
-              //const Searchbar(),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: state.fileSystem.keys.length,
-                  itemBuilder: (context, index) {
-                    final dirPath = state.fileSystem.keys.elementAt(index);
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      FolderFilesPage(folderPath: dirPath),
+          return ListView.builder(
+            itemCount: state.fileSystem.keys.length,
+            itemBuilder: (context, index) {
+              final dirPath = state.fileSystem.keys.elementAt(index);
+              return Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                FolderFilesPage(folderPath: dirPath),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: 80.h,
+                        padding: EdgeInsets.all(12.h),
+                        margin: EdgeInsets.all(12.h),
+                        decoration: BoxDecoration(
+                            color: Appcolor.second,
+                            borderRadius: BorderRadius.circular(15.r)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Icon(BlocProvider.of<Getallfilecubit>(context)
+                                .getIconForFileType(dirPath)),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: SizedBox(
+                                width: 180.w,
+                                child: Text(
+                                  dirPath.split('/').last,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15.sp),
                                 ),
-                              );
-                            },
-                            child: Container(
-                              height: 80.h,
-                              padding: EdgeInsets.all(12.h),
-                              margin: EdgeInsets.all(12.h),
-                              decoration: BoxDecoration(
-                                  color: Appcolor.second,
-                                  borderRadius: BorderRadius.circular(15.r)),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Icon(BlocProvider.of<Getallfilecubit>(context)
-                                      .getIconForFileType(dirPath)),
-                                  SizedBox(
-                                    width: 20.w,
-                                  ),
-                                  Text(
-                                    dirPath.split('/').last,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    width: 30.w,
-                                  ),
-                                  PopupMenuButton<String>(
-                                    onSelected: (value) {
-                                      if (value == 'rename') {
-                                        // عرض نافذة تعديل الاسم
-                                        showAppDialog(
-                                          datatext: 'Rename',
-                                          function: () => BlocProvider.of<
-                                                  Getallfilecubit>(context)
-                                              .renameFolder(
-                                                  dirPath,
-                                                  BlocProvider.of<
-                                                              Getallfilecubit>(
-                                                          context)
-                                                      .foldername
-                                                      .text),
-                                          textEditingController:
-                                              BlocProvider.of<Getallfilecubit>(
-                                                      context)
-                                                  .foldername,
-                                          context: context,
-                                        );
-                                      } else if (value == 'delete') {
-                                        // تنفيذ عملية الحذف
-                                        BlocProvider.of<Getallfilecubit>(
-                                                context)
-                                            .deleteFolder(dirPath);
+                              ),
+                            ),
+                            SizedBox(
+                              width: 30.w,
+                            ),
+                            PopupMenuButton<String>(
+                              onSelected: (value) {
+                                if (value == 'rename') {
+                                  // عرض نافذة تعديل الاسم
+                                  showAppDialog(
+                                    datatext: 'Rename',
+                                    function: () => BlocProvider.of<
+                                            Getallfilecubit>(context)
+                                        .renameFolder(
+                                            dirPath,
+                                            BlocProvider.of<Getallfilecubit>(
+                                                    context)
+                                                .foldername
+                                                .text),
+                                    textEditingController: textEditingController,
+                                         context: context
+                                  );
                                       }
                                     },
                                     itemBuilder: (context) => [
@@ -127,19 +118,14 @@ class _AllfoldersState extends State<Allfolders> {
                       ],
                     );
                   },
-                ),
-              ),
-            ],
-          );
+                );
+        } else if (state is Getallfilestatefailuer) {
+          return Center(child: Text('Error: ${state.error}'));
         } else {
-          return Container();
+          return const Center(child: Text('No files available.'));
         }
       },
-      listener: (BuildContext context, Getallfilestate state) {
-        if (state is Getallfilestatesuccss) {
-        
-        }
-      },
+    
     );
   }
 }

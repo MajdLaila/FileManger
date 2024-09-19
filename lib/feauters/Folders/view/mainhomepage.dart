@@ -1,10 +1,10 @@
+import 'dart:developer';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:files_manger/const.dart';
 import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilecubit.dart';
 import 'package:files_manger/feauters/Folders/data/cubit/permission/getpermissioncubit.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/allfolders.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/dialog.dart';
-import 'package:files_manger/feauters/Folders/view/widgets/page_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   final TextEditingController folderNameController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,19 +34,40 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         title: const AutoSizeText('File Manager'),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) {
-                  return const PageSearch();
-                },
-              ));
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              if (value == 'sortBySize') {
+                log('ss');
+                BlocProvider.of<Getallfilecubit>(context).sortFoldersBySize();
+              } else if (value == 'sortByDate') {
+                BlocProvider.of<Getallfilecubit>(context)
+                    .sortAllFoldersByCreationDate();
+              } else if (value == 'name') {
+                BlocProvider.of<Getallfilecubit>(context)
+                    .sortAllFoldersByName();
+              }
+              // Add more sorting options if needed
             },
-            icon: const Icon(Icons.search),
-          )
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'sortBySize',
+                child: Text('Sort by Size'),
+              ),
+              const PopupMenuItem(
+                value: 'sortByDate',
+                child: Text('Sort by Date'),
+              ),
+              const PopupMenuItem(
+                value: 'name',
+                child: Text('Sort by name'),
+              ),
+              // Add more sorting options if needed
+            ],
+            icon: const Icon(Icons.sort), // أيقونة ترتيب
+          ),
         ],
       ),
-      body: const Allfolders(),
+      body: Allfolders(),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Appcolor.fourth, // لون الـ FAB
         onPressed: () {

@@ -78,10 +78,17 @@ class _FolderFilesPageState extends State<FolderFilesPage> {
                         Icon(BlocProvider.of<Getallfilecubit>(context)
                             .getIconForFileType(
                                 file.path)), // الأيقونة للمجلد أو الملف
-                        SizedBox(width: 20.w),
-                        Text(
-                          file.path.split('/').last,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+
+                        SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: SizedBox(
+                            width: 180.w,
+                            child: Text(
+                              file.path.split('/').last,
+                              style:
+                                    TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp),
+                            ),
+                          ),
                         ),
                         SizedBox(width: 30.w),
                         PopupMenuButton<String>(
