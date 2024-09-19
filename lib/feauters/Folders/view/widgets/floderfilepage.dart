@@ -21,6 +21,10 @@ class _FolderFilesPageState extends State<FolderFilesPage> {
   @override
   void initState() {
     super.initState();
+    _loadFiles(); // Load files when the page is initialized
+  }
+
+  void _loadFiles() {
     BlocProvider.of<Getallfilecubit>(context).foldername.clear();
     BlocProvider.of<Getallfilecubit>(context)
         .listFilesinsidfolder(widget.folderPath);
@@ -30,11 +34,11 @@ class _FolderFilesPageState extends State<FolderFilesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Appcolor.prime,
       appBar: AppBar(
         backgroundColor: Appcolor.third,
         centerTitle: true,
-        title: AutoSizeText(
-            widget.folderPath.split('/').last), // اسم المجلد كعنوان للصفحة
+        title: AutoSizeText(widget.folderPath.split('/').last),
       ),
       body: BlocBuilder<Getallfilecubit, Getallfilestate>(
         builder: (context, state) {
@@ -50,19 +54,23 @@ class _FolderFilesPageState extends State<FolderFilesPage> {
 
                 return InkWell(
                   onTap: () {
+                    // Navigate to the folder if it's a directory
                     if (isDirectory) {
-                      // إذا كان المجلد، افتح نفس الصفحة بمسار المجلد الجديد
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => FolderFilesPage(
-                            folderPath: file.path, // المسار الجديد للمجلد
+                            folderPath: file.path,
                           ),
                         ),
-                      );
+                      ).then((_) {
+                        // Reload files when coming back
+                        setState(() {
+                          _loadFiles(); // تحميل الملفات عند العودة
+                        });
+                      });
                     } else {
-                      // تنفيذ العملية الخاصة بالملف إذا كان ملفًا وليس مجلدًا
-                      // يمكنك هنا فتح الملف باستخدام مكتبة أخرى لعرض الملفات مثلاً
+                      // Handle file tap if needed
                     }
                   },
                   child: Container(
@@ -70,23 +78,22 @@ class _FolderFilesPageState extends State<FolderFilesPage> {
                     padding: EdgeInsets.all(12.h),
                     margin: EdgeInsets.all(12.h),
                     decoration: BoxDecoration(
-                        color: Appcolor.second,
-                        borderRadius: BorderRadius.circular(15.r)),
+                      color: Appcolor.second,
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Icon(BlocProvider.of<Getallfilecubit>(context)
-                            .getIconForFileType(
-                                file.path)), // الأيقونة للمجلد أو الملف
-
+                            .getIconForFileType(file.path)),
                         SingleChildScrollView(
                           scrollDirection: Axis.vertical,
                           child: SizedBox(
                             width: 180.w,
                             child: Text(
                               file.path.split('/').last,
-                              style:
-                                    TextStyle(fontWeight: FontWeight.bold, fontSize: 15.sp),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15.sp),
                             ),
                           ),
                         ),
@@ -138,7 +145,7 @@ class _FolderFilesPageState extends State<FolderFilesPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Appcolor.fourth, // لون الـ FAB
+        backgroundColor: Appcolor.fourth,
         onPressed: () {
           showAppDialog(
               context: context,

@@ -1,12 +1,8 @@
-import 'dart:developer';
-
 import 'package:files_manger/const.dart';
 import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilecubit.dart';
 import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilestate.dart';
-import 'package:files_manger/feauters/Folders/data/cubit/searchFoldersFiles/search_folders_files_cubit.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/dialog.dart';
-import 'package:files_manger/feauters/Folders/view/widgets/floderfilepage.dart'; // تأكد من أن صفحة FolderFilesPage موجودة
-import 'package:files_manger/feauters/Folders/view/widgets/text_feild_search.dart';
+import 'package:files_manger/feauters/Folders/view/widgets/floderfilepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,9 +31,9 @@ class _AllfoldersState extends State<Allfolders> {
         } else if (state is Getallfilestatesuccss) {
           return ListView.builder(
             shrinkWrap: true,
-         
             itemCount: state.fileSystem.keys.length,
             itemBuilder: (context, index) {
+            
               final dirPath = state.fileSystem.keys.elementAt(index);
               return Row(
                 children: [
@@ -82,7 +78,6 @@ class _AllfoldersState extends State<Allfolders> {
                             PopupMenuButton<String>(
                               onSelected: (value) {
                                 if (value == 'rename') {
-                                  // عرض نافذة تعديل الاسم
                                   showAppDialog(
                                       datatext: 'Rename',
                                       function: () => BlocProvider.of<
@@ -94,8 +89,13 @@ class _AllfoldersState extends State<Allfolders> {
                                                   .foldername
                                                   .text),
                                       textEditingController:
-                                          textEditingController,
+                                          BlocProvider.of<Getallfilecubit>(
+                                                  context)
+                                              .foldername,
                                       context: context);
+                                } else if (value == 'delete') {
+                                  BlocProvider.of<Getallfilecubit>(context)
+                                      .deleteFolder(dirPath);
                                 }
                               },
                               itemBuilder: (context) => [

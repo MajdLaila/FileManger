@@ -1,4 +1,4 @@
-import 'dart:developer';
+ 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:files_manger/const.dart';
 import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilecubit.dart';
@@ -6,7 +6,6 @@ import 'package:files_manger/feauters/Folders/data/cubit/permission/getpermissio
 import 'package:files_manger/feauters/Folders/view/widgets/allfolders.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/dialog.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/page_search.dart';
-import 'package:files_manger/feauters/Folders/view/widgets/text_feild_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     BlocProvider.of<RequstPermissionCubit>(context).requestPermissions(context);
     BlocProvider.of<Getallfilecubit>(context).foldername.clear();
   }
@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
           PopupMenuButton<String>(
             onSelected: (value) {
               if (value == 'sortBySize') {
-                log('ss');
+          
                 BlocProvider.of<Getallfilecubit>(context).sortFoldersBySize();
               } else if (value == 'sortByDate') {
                 BlocProvider.of<Getallfilecubit>(context)
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                 BlocProvider.of<Getallfilecubit>(context)
                     .sortAllFoldersByName();
               }
-              // Add more sorting options if needed
+         
             },
             itemBuilder: (context) => [
               const PopupMenuItem(
@@ -64,9 +64,9 @@ class _HomePageState extends State<HomePage> {
                 value: 'name',
                 child: Text('Sort by name'),
               ),
-              // Add more sorting options if needed
+          
             ],
-            icon: const Icon(Icons.sort), // أيقونة ترتيب
+            icon: const Icon(Icons.sort),  
           ),
         ],
         leading: IconButton(
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Appcolor.fourth, // لون الـ FAB
+        backgroundColor: Appcolor.fourth,  
         onPressed: () {
           showAppDialog(
               context: context,
@@ -102,8 +102,9 @@ class _HomePageState extends State<HomePage> {
               textEditingController:
                   BlocProvider.of<Getallfilecubit>(context).foldername);
         },
-        child: const Icon(Icons.create_new_folder), // أيقونة إنشاء مجلد
+        child: const Icon(Icons.create_new_folder), 
       ),
     );
   }
+
 }

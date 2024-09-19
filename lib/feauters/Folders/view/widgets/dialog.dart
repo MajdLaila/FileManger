@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:files_manger/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:files_manger/const.dart';
 
 void showAppDialog({
   required BuildContext context,
@@ -32,26 +32,21 @@ void showAppDialog({
                 children: [
                   InkWell(
                     onTap: () {
-                      // التحقق من صحة المدخلات
-                      if (!RegExp(r'^[a-zA-Z0-9_]+$')
+                      /// for validation
+
+                      if (!RegExp(r'^[\u0621-\u064A0-9_a-zA-Z]+$')
                           .hasMatch(textEditingController.text)) {
-                        // عرض SnackBar في حالة وجود خطأ
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
-                              "Invalid characters in input! Only letters, numbers, and underscores are allowed.",
+                              "Invalid characters in input! Only letters (Arabic and English), numbers, and underscores are allowed.",
                             ),
                           ),
                         );
-                        return; // خروج دون إغلاق الـ dialog
+                        return;
                       }
 
-                      // غلق الـ dialog
                       Navigator.of(context).pop();
-
-                      // عرض SnackBar بعد إغلاق الـ dialog
-
-                      // تنفيذ الـ function
                       function();
                     },
                     child: SizedBox(

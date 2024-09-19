@@ -10,7 +10,6 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
   final Map<String, List<String>> fileSystem = {};
   TextEditingController foldername = TextEditingController();
   late String Folderpath;
-
   Future<void> listFiles() async {
     try {
       emit(Getallfilestateloading());
@@ -41,7 +40,7 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
         }
       }
 
-      //fileSystem.clear();
+      fileSystem.clear();
       fileSystem.addAll(newFileSystem);
 
       emit(Getallfilestatesuccss(fileSystem: fileSystem));
@@ -109,7 +108,6 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
         folderSizes[folderPath] = totalSize;
       }
 
-      // تصنيف المجلدات إلى مجموعتين: المجلدات التي تبدأ بأحرف والمجلدات التي تبدأ بمحارف خاصة
       final foldersWithAlphabets = <String>[];
       final foldersWithSpecialChars = <String>[];
 
@@ -122,7 +120,6 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
         }
       }
 
-      // ترتيب المجلدات حسب الحجم تنازليًا
       foldersWithAlphabets
           .sort((a, b) => folderSizes[b]!.compareTo(folderSizes[a]!));
       foldersWithSpecialChars
@@ -153,20 +150,19 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
 
       final sortedFolders = <Map<String, dynamic>>[];
 
-      // جمع معلومات المجلدات فقط من 
+      // جمع معلومات المجلدات فقط من
       for (var folderPath in fileSystem.keys) {
         final folder = Directory(folderPath);
         if (await folder.exists()) {
           final folderStat = await folder.stat();
           sortedFolders.add({
             'path': folderPath,
-            'name': folderPath.split('/').last, // استخراج اسم المجلد
-            'creationDate': folderStat.changed // تاريخ الإنشاء
+            'name': folderPath.split('/').last,
+            'creationDate': folderStat.changed
           });
         }
       }
 
-      // تصنيف المجلدات إلى مجموعتين: المجلدات التي تبدأ بأحرف والمجلدات التي تبدأ بمحارف خاصة
       final foldersWithAlphabets = <Map<String, dynamic>>[];
       final foldersWithSpecialChars = <Map<String, dynamic>>[];
 
@@ -181,21 +177,18 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
         }
       }
 
-      // ترتيب المجلدات التي تبدأ بأحرف حسب تاريخ الإنشاء
       foldersWithAlphabets.sort((a, b) {
         final dateA = a['creationDate'] as DateTime;
         final dateB = b['creationDate'] as DateTime;
         return dateA.compareTo(dateB);
       });
 
-      // ترتيب المجلدات التي تبدأ بمحارف خاصة حسب تاريخ الإنشاء (إذا كنت تريد ذلك)
       foldersWithSpecialChars.sort((a, b) {
         final dateA = a['creationDate'] as DateTime;
         final dateB = b['creationDate'] as DateTime;
         return dateA.compareTo(dateB);
       });
 
-      // دمج القائمتين: الأحرف أولاً، ثم المحارف الخاصة
       final newFileSystem = <String, List<String>>{};
       for (var folder in foldersWithAlphabets) {
         final folderPath = folder['path'] as String;
@@ -206,11 +199,9 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
         newFileSystem[folderPath] = fileSystem[folderPath]!;
       }
 
-      // تحديث  مع النظام المرتب
       fileSystem.clear();
       fileSystem.addAll(newFileSystem);
 
-      // إرسال الحالة الناجحة مع النظام المرتب
       emit(Getallfilestatesuccss(fileSystem: fileSystem));
     } catch (e) {
       emit(Getallfilestatefailuer(
@@ -223,45 +214,41 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
       emit(Getallfilestateloading());
 
       final sortedFolders = <Map<String, dynamic>>[];
-
-      // جمع معلومات المجلدات فقط من 
+ 
+ 
       fileSystem.forEach((folderPath, filePaths) {
         sortedFolders.add({
           'path': folderPath,
-          'name': folderPath.split('/').last, // استخراج اسم المجلد
+          'name': folderPath.split('/').last,
         });
       });
 
-      // تصنيف المجلدات إلى مجموعتين: المجلدات التي تبدأ بأحرف والمجلدات التي تبدأ بمحارف خاصة
       final foldersWithAlphabets = <Map<String, dynamic>>[];
       final foldersWithSpecialChars = <Map<String, dynamic>>[];
 
       for (var folder in sortedFolders) {
         final name = folder['name'] as String;
         if (RegExp(r'^[a-zA-Z]').hasMatch(name)) {
-          // إذا كان الاسم يبدأ بحرف أبجدي
+  
           foldersWithAlphabets.add(folder);
         } else {
-          // إذا كان الاسم يبدأ بمحرف خاص
+   
           foldersWithSpecialChars.add(folder);
         }
       }
 
-      // ترتيب المجلدات التي تبدأ بأحرف أبجديًا
       foldersWithAlphabets.sort((a, b) {
         final nameA = a['name'] as String;
         final nameB = b['name'] as String;
         return nameA.compareTo(nameB);
       });
 
-      // ترتيب المجلدات التي تبدأ بمحارف خاصة أبجديًا (إذا كنت تريد ذلك، وإلا يمكنك تركها كما هي)
       foldersWithSpecialChars.sort((a, b) {
         final nameA = a['name'] as String;
         final nameB = b['name'] as String;
         return nameA.compareTo(nameB);
       });
 
-      // دمج القائمتين: الأحرف أولاً، ثم المحارف الخاصة
       final newFileSystem = <String, List<String>>{};
       for (var folder in foldersWithAlphabets) {
         final folderPath = folder['path'] as String;
@@ -272,11 +259,9 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
         newFileSystem[folderPath] = fileSystem[folderPath]!;
       }
 
-      // تحديث  مع النظام المرتب
       fileSystem.clear();
       fileSystem.addAll(newFileSystem);
 
-      // إرسال الحالة الناجحة مع النظام المرتب
       emit(Getallfilestatesuccss(fileSystem: fileSystem));
     } catch (e) {
       emit(Getallfilestatefailuer(
@@ -286,18 +271,19 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
 
   Future<void> addFolder(String path, String folderName) async {
     try {
-     
-
       final newDirectory = Directory('$path/$folderName');
       if (!await newDirectory.exists()) {
         await newDirectory.create();
         fileSystem[path]?.add(newDirectory.path);
-        log("Folder created");
+        log("donnnne create");
+        await listFiles();
         await listFilesinsidfolder(path);
         foldername.clear();
       }
     } catch (e) {
       log(e.toString());
+      log("Create error");
+      foldername.clear();
       emit(Getallfilestatefailuer(error: 'Error creating folder: $e'));
     }
   }
@@ -308,12 +294,14 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
       if (await directory.exists()) {
         await directory.delete(recursive: true);
         fileSystem.remove(path);
-        log("Folder deleted");
-        await listFiles(); // Refresh the file system
+        log("remove done");
+        await listFiles();
+        files.removeWhere((file) => file.path == path);
+        // await listFilesinsidfolder(path);
         foldername.clear();
-        await listFilesinsidfolder(Folderpath);
       }
     } catch (e) {
+      foldername.clear();
       emit(Getallfilestatefailuer(error: 'Error deleting folder: $e'));
     }
   }
@@ -321,19 +309,53 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
   Future<void> renameFolder(String oldPath, String newName) async {
     try {
       emit(Getallfilestateloading());
+
       final oldDirectory = Directory(oldPath);
-      late final String newpath;
+
       if (await oldDirectory.exists()) {
         final newPath = '${oldDirectory.parent.path}/$newName';
-        newpath = newPath;
-        await oldDirectory.rename(newPath);
+        final newDirectory = Directory(newPath);
 
-        fileSystem[oldDirectory.parent.path]?.remove(oldPath);
-        [oldDirectory.parent.path].add(newPath);
-        log("Folder renamed");
+        
+        if (await newDirectory.exists()) {
+          emit(Getallfilestatefailuer(
+              error: 'A folder with the new name already exists.'));
+          return;
+        }
+
+    
+        await oldDirectory.rename(newPath);
+ 
+        if (fileSystem.containsKey(oldDirectory.parent.path)) {
+          fileSystem[oldDirectory.parent.path]?.remove(oldPath);
+          fileSystem[oldDirectory.parent.path]?.add(newPath);
+        }
+
+   
+        for (int i = 0; i < files.length; i++) {
+          if (files[i].path == oldPath) {
+            files[i] = Directory(newPath);
+          }
+        }
+
+       
+        await listFiles();
+ 
+        final updatedDirectory = Directory(newPath);
+        if (await updatedDirectory.exists()) {
+          log("Renaming done");
+          await listFiles();
+          emit(Getallfilestatesuccss(fileSystem: fileSystem));
+        } else {
+          emit(Getallfilestatefailuer(
+              error: 'The folder at $newPath does not exist after renaming.'));
+        }
+
+        foldername.clear();
+      } else {
+        emit(Getallfilestatefailuer(
+            error: 'The folder at $oldPath does not exist.'));
       }
-      await listFilesinsidfolder(Folderpath); // Refresh the folder content
-      foldername.clear();
     } catch (e) {
       log(e.toString());
       foldername.clear();

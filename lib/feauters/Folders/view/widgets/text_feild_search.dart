@@ -19,7 +19,7 @@ class Searchbar extends StatelessWidget {
               color: Colors.grey.withOpacity(0.3),
               spreadRadius: 2,
               blurRadius: 8,
-              offset: const Offset(0, 4), // تغيير اتجاه الظل
+              offset: const Offset(0, 4),  
             ),
           ],
         ),
@@ -30,9 +30,9 @@ class Searchbar extends StatelessWidget {
             hintStyle: const TextStyle(color: Colors.grey),
             border: InputBorder.none,
             prefixIcon: Padding(
-              padding: const EdgeInsets.all(8.0), // لتعديل حجم الصورة
+              padding: const EdgeInsets.all(8.0),  
               child: Image.asset('assest/magnifying-glass.png',
-                  width: 24, height: 24), // ضع المسار الصحيح للصورة هنا
+                  width: 24, height: 24),  
             ),
           ),
           onChanged: (value) {
