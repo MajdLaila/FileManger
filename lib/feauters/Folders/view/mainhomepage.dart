@@ -1,16 +1,12 @@
-import 'dart:developer';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:files_manger/const.dart';
 import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilecubit.dart';
 import 'package:files_manger/feauters/Folders/data/cubit/permission/getpermissioncubit.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/allfolders.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/dialog.dart';
-import 'package:files_manger/feauters/homepage/data/cubit/checkBox/check_box_cubit.dart';
-
+import 'package:files_manger/feauters/Folders/view/widgets/page_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -33,22 +29,23 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Appcolor.prime,
       appBar: AppBar(
-          backgroundColor: Appcolor.third,
-          centerTitle: true,
-          title: const AutoSizeText('File Manager'),
-          leading: BlocBuilder<CheckBoxCubit, CheckBoxState>(
-            builder: (context, state) {
-              return BlocProvider.of<CheckBoxCubit>(context).show_all_boxes
-                  ? IconButton(
-                      onPressed: () {
-                        BlocProvider.of<CheckBoxCubit>(context)
-                            .change_boxes_state();
-                      },
-                      icon: const Icon(Icons.cancel_outlined))
-                  : const Text("");
+        backgroundColor: Appcolor.third,
+        centerTitle: true,
+        title: const AutoSizeText('File Manager'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) {
+                  return const PageSearch();
+                },
+              ));
             },
-          )),
-      body: Allfolders(),
+            icon: const Icon(Icons.search),
+          )
+        ],
+      ),
+      body: const Allfolders(),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Appcolor.fourth, // لون الـ FAB
         onPressed: () {

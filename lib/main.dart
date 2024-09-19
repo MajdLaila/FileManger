@@ -1,8 +1,9 @@
 import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilecubit.dart';
 import 'package:files_manger/feauters/Folders/data/cubit/getrecentimages/getrecentimagecubit.dart';
 import 'package:files_manger/feauters/Folders/data/cubit/permission/getpermissioncubit.dart';
+import 'package:files_manger/feauters/Folders/data/cubit/searchFoldersFiles/search_folders_files_cubit.dart';
 import 'package:files_manger/feauters/Folders/view/mainhomepage.dart';
-
+import 'package:files_manger/feauters/Folders/view/widgets/text_feild_search.dart';
 
 import 'package:files_manger/feauters/homepage/data/cubit/checkBox/check_box_cubit.dart';
 // import 'package:files_manger/feauters/homepage/data/cubit/getallfiles/getallfilecubit.dart';
@@ -32,7 +33,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => Getrecentimagecubit(),
         ),
-        BlocProvider(create: (context) => CheckBoxCubit(),)
+        BlocProvider(
+          create: (context) => CheckBoxCubit(),
+        ),
+        BlocProvider(
+          create: (context) => SearchFoldersFilesCubit(),
+        )
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),

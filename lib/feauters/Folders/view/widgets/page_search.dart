@@ -1,59 +1,63 @@
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:files_manger/const.dart';
 import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilecubit.dart';
-import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilestate.dart';
 import 'package:files_manger/feauters/Folders/data/cubit/searchFoldersFiles/search_folders_files_cubit.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/dialog.dart';
-import 'package:files_manger/feauters/Folders/view/widgets/floderfilepage.dart'; // تأكد من أن صفحة FolderFilesPage موجودة
+import 'package:files_manger/feauters/Folders/view/widgets/floderfilepage.dart';
 import 'package:files_manger/feauters/Folders/view/widgets/text_feild_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class Allfolders extends StatefulWidget {
-  const Allfolders({super.key});
-
-  @override
-  State<Allfolders> createState() => _AllfoldersState();
-}
-
-class _AllfoldersState extends State<Allfolders> {
-  final TextEditingController textEditingController = TextEditingController();
-  @override
-  void initState() {
-    super.initState();
-  }
+class PageSearch extends StatelessWidget {
+  const PageSearch({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<Getallfilecubit, Getallfilestate>(
-      builder: (context, state) {
-        if (state is Getallfilestateloading) {
-          return const LOAD();
-        } else if (state is Getallfilestatesuccss) {
-          log(BlocProvider.of<Getallfilecubit>(context).fileSystem.toString());
-          return Column(
-            children: [
-              const SizedBox(height: 14),
-              //const Searchbar(),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: state.fileSystem.keys.length,
-                  itemBuilder: (context, index) {
-                    final dirPath = state.fileSystem.keys.elementAt(index);
-                    return Row(
-                      children: [
-                        Expanded(
-                          child: InkWell(
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text("Search"),
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 20),
+          Searchbar(),
+          BlocBuilder<SearchFoldersFilesCubit, SearchFoldersFilesState>(
+            builder: (context, state) {
+              return state is SearchFoldersFilesStateSuccessful
+                  ? Expanded(
+                      child: ListView.builder(
+                        itemCount:
+                            BlocProvider.of<SearchFoldersFilesCubit>(context)
+                                .search_folders_files
+                                .length,
+                        itemBuilder: (context, index) {
+                          // final file =
+                          //     BlocProvider.of<Getallfilecubit>(context).files[index];
+                          String path =
+                              BlocProvider.of<SearchFoldersFilesCubit>(context)
+                                  .search_folders_files[index];
+                          final isDirectory =
+                              FileSystemEntity.isDirectorySync(path);
+
+                          return InkWell(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      FolderFilesPage(folderPath: dirPath),
-                                ),
-                              );
+                              if (isDirectory) {
+                                // إذا كان المجلد، افتح نفس الصفحة بمسار المجلد الجديد
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FolderFilesPage(
+                                      folderPath: path, // المسار الجديد للمجلد
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                // تنفيذ العملية الخاصة بالملف إذا كان ملفًا وليس مجلدًا
+                                // يمكنك هنا فتح الملف باستخدام مكتبة أخرى لعرض الملفات مثلاً
+                              }
                             },
                             child: Container(
                               height: 80.h,
@@ -67,28 +71,24 @@ class _AllfoldersState extends State<Allfolders> {
                                     MainAxisAlignment.spaceAround,
                                 children: [
                                   Icon(BlocProvider.of<Getallfilecubit>(context)
-                                      .getIconForFileType(dirPath)),
-                                  SizedBox(
-                                    width: 20.w,
-                                  ),
+                                      .getIconForFileType(
+                                          path)), // الأيقونة للمجلد أو الملف
+                                  SizedBox(width: 20.w),
                                   Text(
-                                    dirPath.split('/').last,
+                                    path.split('/').last,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  SizedBox(
-                                    width: 30.w,
-                                  ),
+                                  SizedBox(width: 30.w),
                                   PopupMenuButton<String>(
                                     onSelected: (value) {
                                       if (value == 'rename') {
-                                        // عرض نافذة تعديل الاسم
                                         showAppDialog(
                                           datatext: 'Rename',
                                           function: () => BlocProvider.of<
                                                   Getallfilecubit>(context)
                                               .renameFolder(
-                                                  dirPath,
+                                                  path,
                                                   BlocProvider.of<
                                                               Getallfilecubit>(
                                                           context)
@@ -101,10 +101,9 @@ class _AllfoldersState extends State<Allfolders> {
                                           context: context,
                                         );
                                       } else if (value == 'delete') {
-                                        // تنفيذ عملية الحذف
                                         BlocProvider.of<Getallfilecubit>(
                                                 context)
-                                            .deleteFolder(dirPath);
+                                            .deleteFolder(path);
                                       }
                                     },
                                     itemBuilder: (context) => [
@@ -122,24 +121,17 @@ class _AllfoldersState extends State<Allfolders> {
                                 ],
                               ),
                             ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
-          );
-        } else {
-          return Container();
-        }
-      },
-      listener: (BuildContext context, Getallfilestate state) {
-        if (state is Getallfilestatesuccss) {
-        
-        }
-      },
+                          );
+                        },
+                      ),
+                    )
+                  : state is SearchFoldersFilesStateLoading
+                      ? LOAD()
+                      : Text("");
+            },
+          )
+        ],
+      ),
     );
   }
 }

@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 
 class Getallfilecubit extends Cubit<Getallfilestate> {
   Getallfilecubit() : super(Getallfilestateinit());
-  final Map<String, List<String>> _fileSystem = {};
+  final Map<String, List<String>> fileSystem = {};
   TextEditingController foldername = TextEditingController();
   late String Folderpath;
   Future<void> listFiles() async {
@@ -40,10 +40,10 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
         }
       }
 
-      _fileSystem.clear();
-      _fileSystem.addAll(newFileSystem);
+      //fileSystem.clear();
+      fileSystem.addAll(newFileSystem);
 
-      emit(Getallfilestatesuccss(fileSystem: _fileSystem));
+      emit(Getallfilestatesuccss(fileSystem: fileSystem));
     } catch (e) {
       emit(Getallfilestatefailuer(
           error: 'There was an error fetching files: $e'));
@@ -58,7 +58,7 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
 
       files = directory.listSync();
 
-      emit(Getallfilestatesuccss(fileSystem: _fileSystem));
+      emit(Getallfilestatesuccss(fileSystem: fileSystem));
     } catch (e) {
       emit(Getallfilestatefailuer(
           error: 'There was an error fetching files: $e'));
@@ -83,24 +83,24 @@ IconData getIconForFileType(String filePath) {
   }
 }
   void sortFilesBySize(String dirPath) {
-    if (_fileSystem.containsKey(dirPath)) {
-      _fileSystem[dirPath]?.sort((a, b) {
+    if (fileSystem.containsKey(dirPath)) {
+      fileSystem[dirPath]?.sort((a, b) {
         final fileA = File(a);
         final fileB = File(b);
         return fileA.lengthSync().compareTo(fileB.lengthSync());
       });
-      emit(Getallfilestatesuccss(fileSystem: _fileSystem));
+      emit(Getallfilestatesuccss(fileSystem: fileSystem));
     }
   }
 
   void sortFilesByDate(String dirPath) {
-    if (_fileSystem.containsKey(dirPath)) {
-      _fileSystem[dirPath]?.sort((a, b) {
+    if (fileSystem.containsKey(dirPath)) {
+      fileSystem[dirPath]?.sort((a, b) {
         final fileA = File(a);
         final fileB = File(b);
         return fileA.lastModifiedSync().compareTo(fileB.lastModifiedSync());
       });
-      emit(Getallfilestatesuccss(fileSystem: _fileSystem));
+      emit(Getallfilestatesuccss(fileSystem: fileSystem));
     }
   }
 
@@ -109,7 +109,7 @@ IconData getIconForFileType(String filePath) {
       final newDirectory = Directory('$path/$folderName');
       if (!await newDirectory.exists()) {
         await newDirectory.create();
-        _fileSystem[path]?.add(newDirectory.path);
+        fileSystem[path]?.add(newDirectory.path);
         log("donnnne create");
         await listFiles();
         await listFilesinsidfolder(path);
@@ -128,7 +128,7 @@ IconData getIconForFileType(String filePath) {
       final directory = Directory(path);
       if (await directory.exists()) {
         await directory.delete(recursive: true);
-        _fileSystem.remove(path);
+        fileSystem.remove(path);
         log("remove done");
         await listFiles();
         files.removeWhere((file) => file.path == path);
@@ -151,8 +151,8 @@ IconData getIconForFileType(String filePath) {
         newpath = newPath;
         await oldDirectory.rename(newPath);
 
-        _fileSystem[oldDirectory.parent.path]?.remove(oldPath);
-        _fileSystem[oldDirectory.parent.path]?.add(newPath);
+        fileSystem[oldDirectory.parent.path]?.remove(oldPath);
+        fileSystem[oldDirectory.parent.path]?.add(newPath);
         for (int i = 0; i < files.length; i++) {
           if (files[i].path == oldPath) {
             files[i] = Directory(newPath); // تعديل المسار إلى المسار الجديد
