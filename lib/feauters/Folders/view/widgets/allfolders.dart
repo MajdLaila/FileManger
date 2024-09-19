@@ -15,7 +15,10 @@ class Allfolders extends StatelessWidget {
   final TextEditingController textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<Getallfilecubit, Getallfilestate>(
+    return BlocConsumer<Getallfilecubit, Getallfilestate>(
+    listener: (context, state) {
+      
+    },
       builder: (context, state) {
         if (state is Getallfilestateloading) {
           return const LOAD();
@@ -49,13 +52,17 @@ class Allfolders extends StatelessWidget {
                           children: [
                             Icon(BlocProvider.of<Getallfilecubit>(context)
                                 .getIconForFileType(dirPath)),
-                            SizedBox(
-                              width: 20.w,
-                            ),
-                            Text(
-                              dirPath.split('/').last,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: SizedBox(
+                                width: 180.w,
+                                child: Text(
+                                  dirPath.split('/').last,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15.sp),
+                                ),
+                              ),
                             ),
                             SizedBox(
                               width: 30.w,
@@ -107,8 +114,10 @@ class Allfolders extends StatelessWidget {
               );
             },
           );
+        } else if (state is Getallfilestatefailuer) {
+          return Center(child: Text('Error: ${state.error}'));
         } else {
-          return Container();
+          return const Center(child: Text('No files available.'));
         }
       },
     );

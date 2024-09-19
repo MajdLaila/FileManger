@@ -32,8 +32,27 @@ void showAppDialog({
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.of(context).pop(); // Close the dialog first
-                      function(); // Call the function
+                      // التحقق من صحة المدخلات
+                      if (!RegExp(r'^[a-zA-Z0-9_]+$')
+                          .hasMatch(textEditingController.text)) {
+                        // عرض SnackBar في حالة وجود خطأ
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              "Invalid characters in input! Only letters, numbers, and underscores are allowed.",
+                            ),
+                          ),
+                        );
+                        return; // خروج دون إغلاق الـ dialog
+                      }
+
+                      // غلق الـ dialog
+                      Navigator.of(context).pop();
+
+                      // عرض SnackBar بعد إغلاق الـ dialog
+
+                      // تنفيذ الـ function
+                      function();
                     },
                     child: SizedBox(
                       width: 70.w,
