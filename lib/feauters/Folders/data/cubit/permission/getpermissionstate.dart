@@ -1,7 +1,7 @@
  
 
  
-import 'package:files_manger/feauters/homepage/data/cubit/getallfiles/getallfilecubit.dart';
+import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilecubit.dart';
 import 'package:flutter/material.dart';
 
 sealed class Getpermissionstate {}

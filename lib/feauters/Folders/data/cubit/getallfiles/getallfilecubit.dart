@@ -1,6 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:bloc/bloc.dart';
-import 'package:files_manger/feauters/homepage/data/cubit/getallfiles/getallfilestate.dart';
+import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilestate.dart';
 import 'package:path_provider/path_provider.dart';
 
 class Getallfilecubit extends Cubit<Getallfilestate> {
@@ -22,7 +23,7 @@ class Getallfilecubit extends Cubit<Getallfilestate> {
           await for (FileSystemEntity entity in directoryStream) {
             final path = entity.path;
             final dir = Directory(path).parent.path;
-
+            // log('dir is ${dir}');
             // Add the file to its directory
             if (entity is File) {
               _fileSystem.putIfAbsent(dir, () => []);

@@ -1,10 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:files_manger/const.dart';
-import 'package:files_manger/feauters/homepage/data/cubit/permission/getpermissioncubit.dart';
-import 'package:files_manger/feauters/homepage/view/widgets/allfolders.dart';
+import 'package:files_manger/feauters/Folders/data/cubit/permission/getpermissioncubit.dart';
+import 'package:files_manger/feauters/Folders/view/widgets/allfolders.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
- 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -50,9 +51,12 @@ class _HomePageState extends State<HomePage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Add New Folder'),
-          content: TextField(
-            controller: folderNameController,
-            decoration: const InputDecoration(hintText: 'Enter folder name'),
+          content: SizedBox(
+            height: 300.h,
+            child: TextField(
+              controller: folderNameController,
+              decoration: const InputDecoration(hintText: 'Enter folder name'),
+            ),
           ),
           actions: [
             TextButton(
@@ -61,7 +65,7 @@ class _HomePageState extends State<HomePage> {
                       TextStyle(backgroundColor: Appcolor.prime)),
                   backgroundColor: WidgetStatePropertyAll(Appcolor.second)),
               onPressed: () {
-                Navigator.of(context).pop(); // إغلاق النافذة
+                Navigator.of(context).pop();
               },
               child: const Text('Cancel'),
             ),
@@ -73,8 +77,8 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 String folderName = folderNameController.text;
                 if (folderName.isNotEmpty) {
-                  _createNewFolder(folderName); // تنفيذ منطق لإنشاء المجلد
-                  Navigator.of(context).pop(); // إغلاق النافذة بعد إضافة المجلد
+                  _createNewFolder(folderName);
+                  Navigator.of(context).pop();
                 }
               },
               child: const AutoSizeText('Create'),
@@ -85,9 +89,5 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // دالة لإنشاء مجلد جديد
-  void _createNewFolder(String folderName) {
-    // منطق إنشاء المجلد هنا
-    // يمكنك استخدام أي مكتبة مثل dart:io لإنشاء مجلد جديد في المسار المناسب
-  }
+  void _createNewFolder(String folderName) {}
 }

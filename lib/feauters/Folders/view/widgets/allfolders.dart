@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:files_manger/const.dart';
-import 'package:files_manger/feauters/homepage/data/cubit/getallfiles/getallfilecubit.dart';
-import 'package:files_manger/feauters/homepage/data/cubit/getallfiles/getallfilestate.dart';
-import 'package:files_manger/feauters/homepage/view/widgets/floderfilepage.dart'; // تأكد من أن صفحة FolderFilesPage موجودة
+import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilecubit.dart';
+import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilestate.dart';
+import 'package:files_manger/feauters/Folders/view/widgets/floderfilepage.dart'; // تأكد من أن صفحة FolderFilesPage موجودة
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

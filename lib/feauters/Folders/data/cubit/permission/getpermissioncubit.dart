@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:files_manger/feauters/homepage/data/cubit/getallfiles/getallfilecubit.dart';
-import 'package:files_manger/feauters/homepage/data/cubit/getrecentimages/getrecentimagecubit.dart';
-import 'package:files_manger/feauters/homepage/data/cubit/permission/getpermissionstate.dart';
+import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilecubit.dart';
+import 'package:files_manger/feauters/Folders/data/cubit/getrecentimages/getrecentimagecubit.dart';
+import 'package:files_manger/feauters/Folders/data/cubit/permission/getpermissionstate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

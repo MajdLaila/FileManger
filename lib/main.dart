@@ -1,8 +1,9 @@
+import 'package:files_manger/feauters/Folders/data/cubit/getallfiles/getallfilecubit.dart';
+import 'package:files_manger/feauters/Folders/data/cubit/getrecentimages/getrecentimagecubit.dart';
+import 'package:files_manger/feauters/Folders/data/cubit/permission/getpermissioncubit.dart';
+import 'package:files_manger/feauters/Folders/view/mainhomepage.dart';
 
-import 'package:files_manger/feauters/homepage/data/cubit/getallfiles/getallfilecubit.dart';
-import 'package:files_manger/feauters/homepage/data/cubit/getrecentimages/getrecentimagecubit.dart';
-import 'package:files_manger/feauters/homepage/data/cubit/permission/getpermissioncubit.dart';
-import 'package:files_manger/feauters/homepage/view/mainhomepage.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,10 +27,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => Getrecentimagecubit(),
         ),
+     
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
         builder: (context, child) => MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'File Manager Example',
           theme: ThemeData(
             primarySwatch: Colors.blue,

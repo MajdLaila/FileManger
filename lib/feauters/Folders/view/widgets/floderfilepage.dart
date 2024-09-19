@@ -1,17 +1,30 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:files_manger/const.dart';
 import 'package:flutter/material.dart';
 
-class FolderFilesPage extends StatelessWidget {
+class FolderFilesPage extends StatefulWidget {
   final String folderPath;
 
   const FolderFilesPage({super.key, required this.folderPath});
 
   @override
+  State<FolderFilesPage> createState() => _FolderFilesPageState();
+}
+
+class _FolderFilesPageState extends State<FolderFilesPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    
+  }
+
+  @override
   Widget build(BuildContext context) {
     // الحصول على الملفات والمجلدات داخل المسار
-    final directory = Directory(folderPath);
+    final directory = Directory(widget.folderPath);
     List<FileSystemEntity> files = [];
 
     try {
@@ -26,11 +39,12 @@ class FolderFilesPage extends StatelessWidget {
         centerTitle: true,
         // title: const AutoSizeText('File Manger'),
         title: AutoSizeText(
-            folderPath.split('/').last), // اسم المجلد كعنوان للصفحة
+            widget.folderPath.split('/').last), // اسم المجلد كعنوان للصفحة
       ),
       body: ListView.builder(
         itemCount: files.length,
         itemBuilder: (context, index) {
+          
           final file = files[index];
           final isDirectory = FileSystemEntity.isDirectorySync(file.path);
           return ListTile(
