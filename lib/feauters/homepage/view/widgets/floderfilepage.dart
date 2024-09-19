@@ -1,6 +1,8 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:files_manger/const.dart';
+import 'package:files_manger/feauters/homepage/view/widgets/open_file.dart';
 import 'package:flutter/material.dart';
 
 class FolderFilesPage extends StatelessWidget {
@@ -17,7 +19,7 @@ class FolderFilesPage extends StatelessWidget {
     try {
       files = directory.listSync(); // الحصول على الملفات والمجلدات
     } catch (e) {
-      print('Error: $e');
+      log('Error: $e');
     }
 
     return Scaffold(
@@ -46,6 +48,13 @@ class FolderFilesPage extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) =>
                         FolderFilesPage(folderPath: file.path),
+                  ),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Open_File(filePath: file.path),
                   ),
                 );
               }

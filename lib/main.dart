@@ -1,4 +1,5 @@
 
+import 'package:files_manger/feauters/homepage/data/cubit/checkBox/check_box_cubit.dart';
 import 'package:files_manger/feauters/homepage/data/cubit/getallfiles/getallfilecubit.dart';
 import 'package:files_manger/feauters/homepage/data/cubit/getrecentimages/getrecentimagecubit.dart';
 import 'package:files_manger/feauters/homepage/data/cubit/permission/getpermissioncubit.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => Getrecentimagecubit(),
         ),
+        BlocProvider(create: (context) => CheckBoxCubit(),)
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
